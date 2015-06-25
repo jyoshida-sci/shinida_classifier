@@ -16,6 +16,7 @@ class QCheckBox;
 class QTextEdit;
 class QClickableLabel;
 class QSlider;
+class QStringList;
 
 
 class shinida_classifier : public QWidget
@@ -27,8 +28,11 @@ public:
 	~shinida_classifier();
 
 private:
-	//Ui::shinida_classifierClass ui;
+	int ipict;
+
+
 	QSettings* appsettings;
+	std::vector<QString> vfilename;
 
 	QPushButton* but_pppp;
 	QPushButton* but_ppp;
@@ -50,10 +54,21 @@ private:
 	QLabel* label_file;
 	QPushButton* but_readfile;
 
+	QStringList filesList;
+
+	QPixmap pix_small;
+	QPixmap pix_hough;
+	QPixmap pix_large;
+
+	QLabel* label_small;
+	QLabel* label_hough;
+	QLabel* label_large;
+
 
 	private slots:
 
 	void loadDir();
+	void dispImg(int diff);
 };
 
 #endif // SHINIDA_CLASSIFIER_H

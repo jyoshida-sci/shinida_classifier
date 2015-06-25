@@ -54,8 +54,12 @@ shinida_classifier::shinida_classifier(QWidget *parent)
 	but_p = new QPushButton(tr("<"));
 	lay_disp->addWidget(but_p);
 
-
-
+	label_small = new QLabel();
+	lay_disp->addWidget(label_small);
+	label_hough = new QLabel();
+	lay_disp->addWidget(label_hough);
+	label_large = new QLabel();
+	lay_disp->addWidget(label_large);
 
 	but_n = new QPushButton(tr(">"));
 	lay_disp->addWidget(but_n);
@@ -190,11 +194,58 @@ void shinida_classifier::loadDir(){
 		defaultdir.absolutePath(),
 		QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
+	appsettings->setValue("readdir", dirname);
 	QDir dir = QDir(dirname);
+	filesList = dir.entryList(QDir::Files);
 
-	QStringList filesList = dir.entryList(QDir::Files);
+
+
 	QString fileName;
 	foreach(fileName, filesList) {
 		qDebug() << "FileName " << fileName;
+		QString absolutefilename = "";
+		absolutefilename += dirname;
+		absolutefilename += "\\";
+		absolutefilename += fileName;
+		vfilename.push_back(absolutefilename);
 	}
+
+	ipict = 0;
+	dispImg(0);
+
+
 }
+
+
+void shinida_classifier::dispImg(int diff){
+
+
+	QImage img_small;
+	QImage img_hough;
+	QImage img_large;
+	img_small.load(vfilename[ipict*2 + 1]);
+	img_small = img_small.convertToFormat(QImage::Format_RGB32);
+	label_small->setPixmap(QPixmap::fromImage(img_small));
+
+	img_hough.load(vfilename[ipict * 2]);
+	img_hough = img_hough.convertToFormat(QImage::Format_RGB32);
+	label_hough->setPixmap(QPixmap::fromImage(img_hough));
+
+
+	img_large.load(vfilename[ipict * 2 + 1]);
+	img_large = img_large.convertToFormat(QImage::Format_RGB32);
+	img_large = img_large.scaled(2 * img_large.size());
+	label_large->setPixmap(QPixmap::fromImage(img_large));
+
+
+}
+
+
+/*
+
+QImage myImage;
+myImage.load("test.png");
+
+QLabel myLabel;
+myLabel.setPixmap(QPixmap::fromImage(myImage));
+*/
