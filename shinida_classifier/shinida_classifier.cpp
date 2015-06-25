@@ -97,6 +97,9 @@ shinida_classifier::shinida_classifier(QWidget *parent)
 	setLayout(lay);
 
 
+	//connect signal-slot
+	connect(but_readfile, SIGNAL(clicked()), this, SLOT(loadDir()));
+
 	/*
 	//click info
 	QHBoxLayout *lay_click = new QHBoxLayout();
@@ -174,4 +177,24 @@ shinida_classifier::shinida_classifier(QWidget *parent)
 shinida_classifier::~shinida_classifier()
 {
 
+}
+
+
+
+
+void shinida_classifier::loadDir(){
+	
+	QDir defaultdir = appsettings->value("readdir").toString();
+
+	QString dirname = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+		defaultdir.absolutePath(),
+		QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+	QDir dir = QDir(dirname);
+
+	QStringList filesList = dir.entryList(QDir::Files);
+	QString fileName;
+	foreach(fileName, filesList) {
+		qDebug() << "FileName " << fileName;
+	}
 }

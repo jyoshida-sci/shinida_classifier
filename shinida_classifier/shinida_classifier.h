@@ -49,6 +49,11 @@ private:
 
 	QLabel* label_file;
 	QPushButton* but_readfile;
+
+
+	private slots:
+
+	void loadDir();
 };
 
 #endif // SHINIDA_CLASSIFIER_H
