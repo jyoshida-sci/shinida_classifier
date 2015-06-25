@@ -45,14 +45,17 @@ shinida_classifier::shinida_classifier(QWidget *parent)
 
 	//image
 	QHBoxLayout *lay_disp = new QHBoxLayout();
+
+	QVBoxLayout *lay_prev = new QVBoxLayout();
 	but_pppp = new QPushButton(tr("<1000"));
-	lay_disp->addWidget(but_pppp);
+	lay_prev->addWidget(but_pppp);
 	but_ppp = new QPushButton(tr("<100"));
-	lay_disp->addWidget(but_ppp);
+	lay_prev->addWidget(but_ppp);
 	but_pp = new QPushButton(tr("<10"));
-	lay_disp->addWidget(but_pp);
+	lay_prev->addWidget(but_pp);
 	but_p = new QPushButton(tr("<"));
-	lay_disp->addWidget(but_p);
+	lay_prev->addWidget(but_p);
+	lay_disp->addLayout(lay_prev);
 
 	label_small = new QLabel();
 	lay_disp->addWidget(label_small);
@@ -61,14 +64,19 @@ shinida_classifier::shinida_classifier(QWidget *parent)
 	label_large = new QLabel();
 	lay_disp->addWidget(label_large);
 
-	but_n = new QPushButton(tr(">"));
-	lay_disp->addWidget(but_n);
-	but_nn = new QPushButton(tr(">10"));
-	lay_disp->addWidget(but_nn);
-	but_nnn = new QPushButton(tr(">100"));
-	lay_disp->addWidget(but_nnn);
+	QVBoxLayout *lay_next = new QVBoxLayout();
 	but_nnnn = new QPushButton(tr(">1000"));
-	lay_disp->addWidget(but_nnnn);
+	lay_next->addWidget(but_nnnn);
+	but_nnn = new QPushButton(tr(">100"));
+	lay_next->addWidget(but_nnn);
+	but_nn = new QPushButton(tr(">10"));
+	lay_next->addWidget(but_nn);
+	but_n = new QPushButton(tr(">"));
+	lay_next->addWidget(but_n);
+	lay_disp->addLayout(lay_next);
+
+
+
 	lay->addLayout(lay_disp);
 
 
