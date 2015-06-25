@@ -102,6 +102,9 @@ shinida_classifier::shinida_classifier(QWidget *parent)
 	lay_file->addWidget(label_file);
 	but_readfile = new QPushButton(tr("&Read file"));
 	lay_file->addWidget(but_readfile);
+	but_writefile = new QPushButton(tr("&Write file"));
+	but_writefile->setDisabled(true);
+	lay_file->addWidget(but_writefile);
 
 	lay->addLayout(lay_file);
 
@@ -110,81 +113,28 @@ shinida_classifier::shinida_classifier(QWidget *parent)
 
 
 	//connect signal-slot
+	connect(but_n, SIGNAL(clicked()), this, SLOT(gon()));
+	connect(but_nn, SIGNAL(clicked()), this, SLOT(gonn()));
+	connect(but_nnn, SIGNAL(clicked()), this, SLOT(gonnn()));
+	connect(but_nnnn, SIGNAL(clicked()), this, SLOT(gonnnn()));
+	connect(but_p, SIGNAL(clicked()), this, SLOT(gop()));
+	connect(but_pp, SIGNAL(clicked()), this, SLOT(gopp()));
+	connect(but_ppp, SIGNAL(clicked()), this, SLOT(goppp()));
+	connect(but_pppp, SIGNAL(clicked()), this, SLOT(gopppp()));
+
+	connect(but_blur, SIGNAL(clicked()), this, SLOT(pushed_blur()));
+	connect(but_track, SIGNAL(clicked()), this, SLOT(pushed_track()));
+	connect(but_scratch, SIGNAL(clicked()), this, SLOT(pushed_scratch()));
+	connect(but_1vtx, SIGNAL(clicked()), this, SLOT(pushed_1vtx()));
+	connect(but_alpha, SIGNAL(clicked()), this, SLOT(pushed_alpha()));
+	connect(but_2vtx, SIGNAL(clicked()), this, SLOT(pushed_2vtx()));
+
+
 	connect(but_readfile, SIGNAL(clicked()), this, SLOT(loadDir()));
-
-	/*
-	//click info
-	QHBoxLayout *lay_click = new QHBoxLayout();
-	lab_pix = new QLabel();
-	lab_pix->setFont(QFont("Arial", 10));
-	lay_click->addWidget(lab_pix);
-	lab_pix_cl = new QLabel();
-	lab_pix_cl->setFont(QFont("Arial", 10));
-	lay_click->addWidget(lab_pix_cl);
-	lab_pix_dr = new QLabel();
-	lab_pix_dr->setFont(QFont("Arial", 10));
-	lay_click->addWidget(lab_pix_dr);
-	lay->addLayout(lay_click, 4, 0, 1, 2);
-
-	QHBoxLayout *lay_stage = new QHBoxLayout();
-	lab_stg = new QLabel();
-	lab_stg->setFont(QFont("Arial", 10));
-	lay_stage->addWidget(lab_stg);
-	lab_stg_cl = new QLabel();
-	lab_stg_cl->setFont(QFont("Arial", 10));
-	lay_stage->addWidget(lab_stg_cl);
-	lab_stg_dr = new QLabel();
-	lab_stg_dr->setFont(QFont("Arial", 10));
-	lay_stage->addWidget(lab_stg_dr);
-	lay->addLayout(lay_stage, 5, 0, 1, 2);
-
-
-
-	//file path
-	QHBoxLayout *lay_file = new QHBoxLayout();
-	line_file = new QLineEdit(QString("no file yet"));
-	but_file = new QPushButton(tr("&Read file"));
-	lcd_img = new QLCDNumber();
-	chk_filterd = new QCheckBox("filterd");
-	//chk_filterd->setCheckState(Qt::Checked);
-	lay_file->addWidget(line_file);
-	lay_file->addWidget(but_file);
-	lay_file->addWidget(lcd_img);
-	lay_file->addWidget(chk_filterd);
-	lay->addLayout(lay_file, 6, 0, 1, 2);
-
-	sli_z = new QSlider();
-	lay->addWidget(sli_z, 0, 2, 6, 1);
-
-	//texteditarea
-	txt_clicked = new QTextEdit();
-	txt_clicked->setFixedWidth(170);
-	lay->addWidget(txt_clicked, 0, 3, 5, 1);
-	but_writxt = new QPushButton(tr("&Save File"));
-	lay->addWidget(but_writxt, 5, 3, 1, 1);
-	//but_make = new QPushButton(tr("&Make pict"));
-	//lay->addWidget(but_make, 4, 2, 1, 1);
-
-
-
-
-
-	//connect signal-slot
-	connect(but_file, SIGNAL(clicked()), this, SLOT(loadImg()));
-	connect(but_up, SIGNAL(clicked()), this, SLOT(imgUp()));
-	connect(but_down, SIGNAL(clicked()), this, SLOT(imgDown()));
-
-	connect(but_writxt, SIGNAL(clicked()), this, SLOT(writeTxtFile()));
-	connect(this, SIGNAL(wheelEvent(QWheelEvent*)), this, SLOT(changeLayer(QWheelEvent*)));
-	connect(lab_img, SIGNAL(mousePressed(QMouseEvent*)), this, SLOT(labMouseClicked(QMouseEvent*)));
-	connect(lab_img, SIGNAL(mouseMoved(QMouseEvent*)), this, SLOT(labMouseMoved(QMouseEvent*)));
-	connect(sli_z, SIGNAL(valueChanged(int)), this, SLOT(changeToNthLayer(int)));
-
-	but_up->setDisabled(true);
-	but_down->setDisabled(true);
-	sli_z->setDisabled(true);
-	*/
+	connect(but_writefile, SIGNAL(clicked()), this, SLOT(writeFile()));
 }
+
+
 
 shinida_classifier::~shinida_classifier()
 {
@@ -204,6 +154,7 @@ void shinida_classifier::loadDir(){
 
 	appsettings->setValue("readdir", dirname);
 	QDir dir = QDir(dirname);
+	dir.setNameFilters(QStringList() << "*.png");
 	filesList = dir.entryList(QDir::Files);
 
 
@@ -211,22 +162,100 @@ void shinida_classifier::loadDir(){
 	QString fileName;
 	foreach(fileName, filesList) {
 		qDebug() << "FileName " << fileName;
-		QString absolutefilename = "";
-		absolutefilename += dirname;
-		absolutefilename += "\\";
-		absolutefilename += fileName;
-		vfilename.push_back(absolutefilename);
+		vfilename.push_back(QString("%1\\%2").arg(dirname).arg(fileName));
+		vvtxname.push_back(fileName);
+		vclass.push_back(QString("-"));
 	}
 
 	ipict = 0;
-	dispImg(0);
+	dispImg();
 
+	but_writefile->setEnabled(true);
+}
+
+
+
+void shinida_classifier::gop(){
+	if (ipict - 1 < 0) return;
+	ipict -= 1;
+	dispImg();
+}
+void shinida_classifier::gopp(){
+	if (ipict - 10 < 0) return;
+	ipict -= 10;
+	dispImg();
+}
+void shinida_classifier::goppp(){
+	if (ipict - 100  < 0) return;
+	ipict -= 100;
+	dispImg();
+}
+void shinida_classifier::gopppp(){
+	if (ipict - 1000  < 0) return;
+	ipict -= 1000;
+	dispImg();
+}
+
+void shinida_classifier::gon(){
+	if (ipict + 1 > vfilename.size() / 2 - 1) return;
+	ipict += 1;
+	dispImg();
+}
+void shinida_classifier::gonn(){
+	if (ipict + 10 > vfilename.size() / 2 - 1) return;
+	ipict += 10;
+	dispImg();
+}
+void shinida_classifier::gonnn(){
+	if (ipict + 100 > vfilename.size() / 2 - 1) return;
+	ipict += 100;
+	dispImg();
+}
+void shinida_classifier::gonnnn(){
+	if (ipict + 1000 > vfilename.size() / 2 - 1) return;
+	ipict += 1000;
+	dispImg();
+}
+
+
+void shinida_classifier::pushed_blur(){
+	vclass[ipict * 2 + 1] = "b";
+	gon();
+}
+
+void shinida_classifier::pushed_track(){
+	vclass[ipict * 2 + 1] = "t";
+	gon();
+
+}
+
+void shinida_classifier::pushed_scratch(){
+	vclass[ipict * 2 + 1] = "s";
+	gon();
+
+}
+
+void shinida_classifier::pushed_1vtx(){
+	vclass[ipict * 2 + 1] = "v";
+	gon();
+
+}
+
+void shinida_classifier::pushed_alpha(){
+	vclass[ipict * 2 + 1] = "a";
+	gon();
+
+}
+
+void shinida_classifier::pushed_2vtx(){
+	vclass[ipict * 2 + 1] = "w";
+	gon();
 
 }
 
 
-void shinida_classifier::dispImg(int diff){
 
+void shinida_classifier::dispImg(){
 
 	QImage img_small;
 	QImage img_hough;
@@ -245,6 +274,8 @@ void shinida_classifier::dispImg(int diff){
 	img_large = img_large.scaled(2 * img_large.size());
 	label_large->setPixmap(QPixmap::fromImage(img_large));
 
+	QString str = QString("%1  %2  %3").arg(ipict).arg(vvtxname[ipict*2+1]).arg(vclass[ipict*2+1]);
+	label_file->setText(str);
 
 }
 
@@ -257,3 +288,33 @@ myImage.load("test.png");
 QLabel myLabel;
 myLabel.setPixmap(QPixmap::fromImage(myImage));
 */
+
+
+
+void shinida_classifier::writeFile(){
+
+	QDir dir = appsettings->value("writedir").toString();
+	qDebug() << dir.absolutePath();
+	//dialog
+	QString selFilter = "All files (*.txt)";
+	QString fileName = QFileDialog::getSaveFileName(
+		this,
+		"Save file",
+		dir.absolutePath(),
+		"Text files (*.txt);;All files (*.*)",
+		&selFilter);
+
+	dir = QFileInfo(fileName).absoluteDir();
+	appsettings->setValue("writedir", dir.absolutePath());
+
+	// write text file 
+	QFile file(fileName);
+	if (file.open(QIODevice::WriteOnly)) {
+		for (int i = 0; i < vvtxname.size(); i+=2){
+			QTextStream stream(&file);
+			QString str = QString("%1  %2\n").arg(vvtxname[i+1]).arg(vclass[i+1]);
+			stream << str;
+		}
+	}
+
+}

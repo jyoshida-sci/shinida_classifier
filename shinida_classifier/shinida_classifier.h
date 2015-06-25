@@ -33,6 +33,8 @@ private:
 
 	QSettings* appsettings;
 	std::vector<QString> vfilename;
+	std::vector<QString> vvtxname;
+	std::vector<QString> vclass;
 
 	QPushButton* but_pppp;
 	QPushButton* but_ppp;
@@ -53,6 +55,7 @@ private:
 
 	QLabel* label_file;
 	QPushButton* but_readfile;
+	QPushButton* but_writefile;
 
 	QStringList filesList;
 
@@ -65,10 +68,29 @@ private:
 	QLabel* label_large;
 
 
-	private slots:
+	void dispImg();
+
+
+private slots:
 
 	void loadDir();
-	void dispImg(int diff);
+	void gop();
+	void gopp();
+	void goppp();
+	void gopppp();
+	void gon();
+	void gonn();
+	void gonnn();
+	void gonnnn();
+	void writeFile();
+
+	void pushed_blur();
+	void pushed_track();
+	void pushed_scratch();
+	void pushed_1vtx();
+	void pushed_alpha();
+	void pushed_2vtx();
+
 };
 
 #endif // SHINIDA_CLASSIFIER_H
