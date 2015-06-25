@@ -69,7 +69,7 @@ private:
 
 
 	void dispImg();
-
+	void buttons(bool flag);
 
 private slots:
 

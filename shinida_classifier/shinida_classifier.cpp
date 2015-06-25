@@ -100,10 +100,9 @@ shinida_classifier::shinida_classifier(QWidget *parent)
 	QHBoxLayout *lay_file = new QHBoxLayout();
 	label_file = new QLabel(QString("no file yet"));
 	lay_file->addWidget(label_file);
-	but_readfile = new QPushButton(tr("&Read file"));
+	but_readfile = new QPushButton(tr("&Read files"));
 	lay_file->addWidget(but_readfile);
 	but_writefile = new QPushButton(tr("&Write file"));
-	but_writefile->setDisabled(true);
 	lay_file->addWidget(but_writefile);
 
 	lay->addLayout(lay_file);
@@ -111,6 +110,8 @@ shinida_classifier::shinida_classifier(QWidget *parent)
 	//layout
 	setLayout(lay);
 
+	//initialstate : buttons are disabled
+	buttons(false);
 
 	//connect signal-slot
 	connect(but_n, SIGNAL(clicked()), this, SLOT(gon()));
@@ -136,12 +137,33 @@ shinida_classifier::shinida_classifier(QWidget *parent)
 
 
 
+
 shinida_classifier::~shinida_classifier()
 {
 
 }
 
 
+void shinida_classifier::buttons(bool flag){
+	but_pppp->setEnabled(flag);
+	but_ppp->setEnabled(flag);
+	but_pp->setEnabled(flag);
+	but_p->setEnabled(flag);
+	but_nnnn->setEnabled(flag);
+	but_nnn->setEnabled(flag);
+	but_nn->setEnabled(flag);
+	but_n->setEnabled(flag);
+
+
+	but_blur->setEnabled(flag);
+	but_track->setEnabled(flag);
+	but_scratch->setEnabled(flag);
+	but_1vtx->setEnabled(flag);
+	but_alpha->setEnabled(flag);
+	but_2vtx->setEnabled(flag);
+
+	but_writefile->setEnabled(flag);
+}
 
 
 void shinida_classifier::loadDir(){
@@ -158,7 +180,6 @@ void shinida_classifier::loadDir(){
 	filesList = dir.entryList(QDir::Files);
 
 
-
 	QString fileName;
 	foreach(fileName, filesList) {
 		qDebug() << "FileName " << fileName;
@@ -170,7 +191,7 @@ void shinida_classifier::loadDir(){
 	ipict = 0;
 	dispImg();
 
-	but_writefile->setEnabled(true);
+	buttons(true);
 }
 
 
@@ -180,16 +201,19 @@ void shinida_classifier::gop(){
 	ipict -= 1;
 	dispImg();
 }
+
 void shinida_classifier::gopp(){
 	if (ipict - 10 < 0) return;
 	ipict -= 10;
 	dispImg();
 }
+
 void shinida_classifier::goppp(){
 	if (ipict - 100  < 0) return;
 	ipict -= 100;
 	dispImg();
 }
+
 void shinida_classifier::gopppp(){
 	if (ipict - 1000  < 0) return;
 	ipict -= 1000;
@@ -201,16 +225,19 @@ void shinida_classifier::gon(){
 	ipict += 1;
 	dispImg();
 }
+
 void shinida_classifier::gonn(){
 	if (ipict + 10 > vfilename.size() / 2 - 1) return;
 	ipict += 10;
 	dispImg();
 }
+
 void shinida_classifier::gonnn(){
 	if (ipict + 100 > vfilename.size() / 2 - 1) return;
 	ipict += 100;
 	dispImg();
 }
+
 void shinida_classifier::gonnnn(){
 	if (ipict + 1000 > vfilename.size() / 2 - 1) return;
 	ipict += 1000;
@@ -226,31 +253,26 @@ void shinida_classifier::pushed_blur(){
 void shinida_classifier::pushed_track(){
 	vclass[ipict * 2 + 1] = "t";
 	gon();
-
 }
 
 void shinida_classifier::pushed_scratch(){
 	vclass[ipict * 2 + 1] = "s";
 	gon();
-
 }
 
 void shinida_classifier::pushed_1vtx(){
 	vclass[ipict * 2 + 1] = "v";
 	gon();
-
 }
 
 void shinida_classifier::pushed_alpha(){
 	vclass[ipict * 2 + 1] = "a";
 	gon();
-
 }
 
 void shinida_classifier::pushed_2vtx(){
 	vclass[ipict * 2 + 1] = "w";
 	gon();
-
 }
 
 
@@ -276,7 +298,6 @@ void shinida_classifier::dispImg(){
 
 	QString str = QString("%1  %2  %3").arg(ipict).arg(vvtxname[ipict*2+1]).arg(vclass[ipict*2+1]);
 	label_file->setText(str);
-
 }
 
 
