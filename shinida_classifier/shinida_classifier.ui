@@ -1,0 +1,25 @@
+<UI version="4.0" >
+ <class>shinida_classifierClass</class>
+ <widget class="QWidget" name="shinida_classifierClass" >
+  <property name="objectName" >
+   <string notr="true">shinida_classifierClass</string>
+  </property>
+  <property name="geometry" >
+   <rect>
+	<x>0</x>
+	<y>0</y>
+	<width>600</width>
+	<height>400</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>shinida_classifier</string>
+  </property>
+ </widget>
+ <layoutDefault spacing="6" margin="11" />
+ <pixmapfunction></pixmapfunction>
+ <resources>
+   <include location="shinida_classifier.qrc"/>
+ </resources>
+ <connections/>
+</UI>
