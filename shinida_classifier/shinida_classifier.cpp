@@ -25,7 +25,6 @@
 #include "qmenu.h"
 #include <QMouseEvent>
 
-#include "QClickableLabel.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -46,9 +45,57 @@ shinida_classifier::shinida_classifier(QWidget *parent)
 
 	//image
 	QHBoxLayout *lay_disp = new QHBoxLayout();
-	but_ppp = new QPushButton(tr("<<<"));
+	but_pppp = new QPushButton(tr("<1000"));
+	lay_disp->addWidget(but_pppp);
+	but_ppp = new QPushButton(tr("<100"));
 	lay_disp->addWidget(but_ppp);
-	lay->addLayout(lay_disp );
+	but_pp = new QPushButton(tr("<10"));
+	lay_disp->addWidget(but_pp);
+	but_p = new QPushButton(tr("<"));
+	lay_disp->addWidget(but_p);
+
+
+
+
+	but_n = new QPushButton(tr(">"));
+	lay_disp->addWidget(but_n);
+	but_nn = new QPushButton(tr(">10"));
+	lay_disp->addWidget(but_nn);
+	but_nnn = new QPushButton(tr(">100"));
+	lay_disp->addWidget(but_nnn);
+	but_nnnn = new QPushButton(tr(">1000"));
+	lay_disp->addWidget(but_nnnn);
+	lay->addLayout(lay_disp);
+
+
+	//classify
+	QHBoxLayout *lay_cat = new QHBoxLayout();
+	but_blur = new QPushButton(tr("blur"));
+	lay_cat->addWidget(but_blur);
+	but_track = new QPushButton(tr("track"));
+	lay_cat->addWidget(but_track);
+	but_scratch = new QPushButton(tr("scratch"));
+	lay_cat->addWidget(but_scratch);
+	but_1vtx = new QPushButton(tr("1vtx"));
+	lay_cat->addWidget(but_1vtx);
+	but_alpha = new QPushButton(tr("alpha"));
+	lay_cat->addWidget(but_alpha);
+	but_2vtx = new QPushButton(tr("2vtx"));
+	lay_cat->addWidget(but_2vtx);
+	lay->addLayout(lay_cat);
+
+	//file path
+	QHBoxLayout *lay_file = new QHBoxLayout();
+	label_file = new QLabel(QString("no file yet"));
+	lay_file->addWidget(label_file);
+	but_readfile = new QPushButton(tr("&Read file"));
+	lay_file->addWidget(but_readfile);
+
+	lay->addLayout(lay_file);
+
+	//layout
+	setLayout(lay);
+
 
 	/*
 	//click info
@@ -104,8 +151,7 @@ shinida_classifier::shinida_classifier(QWidget *parent)
 	//lay->addWidget(but_make, 4, 2, 1, 1);
 
 
-	//layout
-	setLayout(lay);
+
 
 
 	//connect signal-slot
